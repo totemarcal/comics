@@ -7,6 +7,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".ComicsApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:usesCleartextTraffic="true"
@@ -17,7 +18,7 @@
         android:theme="@style/Theme.Comics"
         tools:targetApi="31">
         <activity
-            android:name="com.example.comics.view.MainActivity"
+            android:name="com.example.comics.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

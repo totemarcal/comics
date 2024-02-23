@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -15,6 +17,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "API_KEY_COMICS", "\"b7e14bab409c70a5c4e7c2b319c09d7b\""
+        buildConfigField "String", "TS_COMICS", "\"1682982412\""
+        buildConfigField "String", "HASH_COMICS", "\"3482f01e9bf207a437a4b621c91339ad\""
+        buildConfigField "String", "BASE_URL_COMICS", "\"https://gateway.marvel.com/v1/public/\""
+
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -38,12 +46,20 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
+    }
+
+    buildFeatures {
+        compose true
+        buildConfig = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.0'
     }
 }
 
@@ -53,7 +69,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.code.gson:gson:2.10.1'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.mockk:mockk:1.12.4"
@@ -63,57 +78,58 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
     implementation 'com.github.bumptech.glide:glide:4.15.1'
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-common-java8:2.6.1"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
-//    implementation "io.reactivex.rxjava2:rxjava:2.2.9"
-//    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
-//    def lifecycle_version = "2.6.1"
-//    def arch_version = "2.2.0"
-//
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-//    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
-//    testImplementation "androidx.arch.core:core-testing:$arch_version"
-//    testImplementation "androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version"
+    implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation "androidx.compose.ui:ui:$compose_ui_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
 
-//    def room_version = "2.4.1"
-//    implementation "androidx.room:room-runtime:$room_version"
-//    annotationProcessor "androidx.room:room-compiler:$room_version"
-//    implementation "androidx.room:room-rxjava2:$room_version"
-//    implementation "androidx.room:room-rxjava3:$room_version"
-//    implementation "androidx.room:room-guava:$room_version"
-//    testImplementation "androidx.room:room-testing:$room_version"
-//    implementation "androidx.room:room-paging:2.5.1"
+    // Coil
+    implementation "io.coil-kt:coil-compose:2.2.2"
 
-    //compose
-//    def composeBom = platform('androidx.compose:compose-bom:2022.10.00')
-//    implementation composeBom
-//    implementation 'androidx.compose.material3:material3'
-//    implementation 'androidx.compose.material:material'
-//    implementation 'androidx.compose.foundation:foundation'
-//    implementation "androidx.compose.ui:ui"
-//    implementation 'androidx.compose.material:material-icons-core'
-//    implementation 'androidx.compose.material:material-icons-extended'
-//    implementation 'androidx.compose.material3:material3-window-size-class'
-//    implementation 'androidx.activity:activity-compose:1.7.1'
-//    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
-//    implementation("androidx.compose.runtime:runtime:1.4.3")
-//    implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
+    //Timber
+    implementation "com.jakewharton.timber:timber:5.0.1"
 
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Splashscreen
+    implementation "androidx.core:core-splashscreen:1.0.0"
+
+    //Gson
+    implementation "com.google.code.gson:gson:2.10.1"
+
+    // Others - Compose dependencies
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+    implementation "androidx.compose.material:material-icons-extended:1.4.0"
+    implementation 'androidx.compose.material:material:1.2.0'
+    implementation "com.google.accompanist:accompanist-flowlayout:0.17.0"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+
+    // Retrofit8.10
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.2"
+    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
+
+    //DI - Hilt
+    implementation "com.google.dagger:hilt-android:2.45"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    kapt "com.google.dagger:hilt-compiler:2.45"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+
+    //Room
+    implementation "androidx.room:room-ktx:2.4.2"
+    implementation "androidx.room:room-runtime:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
 }
