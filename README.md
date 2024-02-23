@@ -20,5 +20,19 @@ Framework de injeção de dependência para Android que simplifica a configuraç
 ## Flow
 API de programação reativa no Kotlin para lidar com fluxos de dados assíncronos de maneira eficiente.
 
+# Test
+
+## MockK
+
+Framework de mocking para Kotlin que simplifica a criação de mocks em testes unitários.
+
+## JUnit
+
+Framework de teste unitário para Java e Kotlin amplamente utilizado para validar o comportamento do código.
+
+## coroutines.test.runBlockingTest
+
+Extensão do Kotlin Coroutines para facilitar testes de código assíncrono usando coroutines, permitindo controle e observação do fluxo assíncrono em testes de unidade.
+
 ![image](https://github.com/totemarcal/comics/assets/18669649/4419603e-20bf-4f2a-9b87-0d5baf569130)
 
